@@ -18,7 +18,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    prfileImageURL: {
+    profileImageURL: {
         type: String,
         default: "/uploads/public/userAvatar.jpeg"
     },

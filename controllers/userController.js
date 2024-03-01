@@ -18,6 +18,7 @@ exports.signup = async (req, res) => {
         }
 
         const newUser = new User({ fullname, email, password });
+        newUser.profileImageURL = req.file.path;
         await newUser.save();
 
         return res.status(201).json({
