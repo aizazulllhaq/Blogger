@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const { createTokenForUser } = require("../utils/authenticationToken");
 
 const userSchema = new Schema({
@@ -18,7 +18,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    profileImageURL: {
+    profileImage: {
         type: String,
         default: "/uploads/public/userAvatar.jpeg"
     },
@@ -26,7 +26,19 @@ const userSchema = new Schema({
         type: String,
         enum: ['USER', 'ADMIN'],
         default: "USER"
-    }
+    },
+    is_verify: {
+        type: Boolean,
+        default: false
+    },
+    token: {
+        type: String,
+    },
+    rp_token: [
+        {
+            type: String
+        }
+    ]
 }, {
     timestamps: true
 });
@@ -48,7 +60,6 @@ userSchema.pre("save", async function (next) {
 
 userSchema.static("matchPasswordAndGenerateToken", async function (email, password) {
     const user = await this.findOne({ email });
-
     if (!user) throw new Error("User Not Found");
 
     // const salt = user.salt;

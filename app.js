@@ -5,8 +5,10 @@ const app = express();
 const ejs = require('ejs');
 const path = require('path');
 const userRouter = require('./routes/userRoutes');
-const { checkForUserAuthentication } = require('./middlewares/checkAuthentication');
+const { checkForUserAuthentication, restrictTo } = require('./middlewares/checkAuthentication');
 const cookieParser = require('cookie-parser');
+const blogRouter = require('./routes/blogRoutes');
+const ExpressError = require('./middlewares/ErrorHandling');
 
 
 // Database Connection
@@ -23,6 +25,22 @@ app.use(checkForUserAuthentication);
 
 // Routes
 app.use("/api/users", userRouter);
+app.use("/blogs", restrictTo(["USER", "ADMIN"]), blogRouter);
+
+
+// Pages which Doesn't Exists
+app.all("*", (req, res, next) => {
+    next(new ExpressError(404, "Page Not Found"));
+})
+
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+    const { status = 500, message = "Internal Server Error" } = err;
+    res.status(status).json({
+        success: false,
+        error: message,
+    })
+})
 
 // Server Listening
 app.listen(process.env.PORT, () => {

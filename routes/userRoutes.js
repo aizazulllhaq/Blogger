@@ -2,8 +2,10 @@ const { Router } = require("express");
 
 const userRouter = Router();
 const userController = require('../controllers/userController');
-
 const multer = require('multer');
+const { restrictTo, restrictNonLoginUser } = require("../middlewares/checkAuthentication");
+const { isSchemaValidate } = require("../utils/schemasValidation");
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, "./public/uploads/");
@@ -17,11 +19,16 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 userRouter
-    .get("/signup", userController.signInPage)
-    .get('/signin', userController.signUpPage)
-    .post('/signup', upload.single('profileImageURL'), userController.signup)
+    .get("/signup", userController.signUpPage)
+    .get('/signin', userController.signInPage)
+    .get("/verify", restrictNonLoginUser(["USER", "ADMIN"]), userController.verifyMail)
+    .get('/resetPassword', userController.resetPasswordPage)
+    .post("/resetPassword", userController.resetPassword)
+    .get("/changePassword", userController.changePassword)
+    .post("/changePassword", userController.setNewPassword)
+    .post('/signup', upload.single('profileImage'), isSchemaValidate, userController.signup)
     .post('/signin', userController.signIn)
-    .get('/logout', userController.logout);
+    .get('/logout', restrictTo(["USER", "ADMIN"]), userController.logout);
 
 
 module.exports = userRouter;

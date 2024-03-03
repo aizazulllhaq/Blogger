@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Blog</title>
+</head>
+
+<body>
+  <form action="/new" method="post" enctype="multipart/form-data">
+    <div>
+      <input type="text" name="title" required placeholder="Title">
+    </div>
+    <div>
+      Cover Image <input type="file" name="coverImage" required />
+    </div>
+    <div>
+      <textarea name="content" id="content" cols="30" required rows="10" placeholder="Content"></textarea>
+    </div>
+    <div>
+      <button type="submit">Create Blog</button>
+    </div>
+  </form>
+</body>
+
+</html>
