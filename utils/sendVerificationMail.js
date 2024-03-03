@@ -22,7 +22,7 @@ exports.sendVerificationMail = (userName, userEmail, userID) => {
         from: process.env.Email,
         to: userEmail,
         subject: "User Verification Mail",
-        html: `Hey ${userName} please <a href="http://localhost:8080/api/users/verify?id=${userID}&expiry=${expiryTimestamp}&token=${randomToken}">Verify Mail</a> to Continue`
+        html: `Hey ${userName} please <a href="${process.env.SERVER_URL}/api/users/verify?id=${userID}&expiry=${expiryTimestamp}&token=${randomToken}">Verify Mail</a> to Continue`
     }
 
     transporter.sendMail(mailOptions, (err, info) => {

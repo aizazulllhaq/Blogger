@@ -28,7 +28,7 @@ exports.sendResetPasswordLink = async (userName, userEmail, userID) => {
         from: process.env.Email,
         to: userEmail,
         subject: "Reset Password Mail",
-        html: `Hey ${userName} please <a href="http://localhost:8080/api/users/changePassword?id=${userID}&expiry=${expiryTimestamp}&rp_token=${randomToken}">Reset your Password</a> to Continue`
+        html: `Hey ${userName} please <a href="${process.env.SERVER_URL}/api/users/changePassword?id=${userID}&expiry=${expiryTimestamp}&rp_token=${randomToken}">Reset your Password</a> to Continue`
     }
 
     transporter.sendMail(mailOptions, (err, info) => {
